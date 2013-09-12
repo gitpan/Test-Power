@@ -3,7 +3,7 @@ use 5.008005;
 use strict;
 use warnings;
 
-our $VERSION = "0.02";
+our $VERSION = "0.03";
 
 use Test::More 0.98 ();
 use B::Deparse;
@@ -20,6 +20,11 @@ use constant {
     RESULT_VALUE => 0,
     RESULT_OPINDEX => 1,
 };
+
+use Config;
+if ($Config{useithreads}) {
+    die "Sorry, current version of Test::Power does not support ithreads. I want to fix this issue. Patches welcome.\n";
+}
 
 our $DEPARSE = B::Deparse->new;
 our $DUMP_CUTOFF = 80;
@@ -81,6 +86,8 @@ Output:
 =head1 DESCRIPTION
 
 B<WARNINGS: This module is currently on ALPHA state. Any APIs will change without notice. Notice that since this module uses the B power, it may cause segmentation fault.>
+
+B<WARNINGS AGAIN: Current version of Test::Power does not support ithreads.>
 
 Test::Power is yet another testing framework.
 
