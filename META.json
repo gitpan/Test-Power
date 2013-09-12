@@ -57,7 +57,7 @@
    "provides" : {
       "Test::Power" : {
          "file" : "lib/Test/Power.pm",
-         "version" : "0.01"
+         "version" : "0.02"
       },
       "Test::Power::Core" : {
          "file" : "lib/Test/Power/Core.pm"
@@ -77,5 +77,8 @@
          "web" : "https://github.com/tokuhirom/Test-Power"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02",
+   "x_contributors" : [
+      "adrian.candos <adrian.candos@dena.jp>"
+   ]
 }
