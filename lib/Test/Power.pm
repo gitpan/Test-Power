@@ -1,9 +1,9 @@
 package Test::Power;
-use 5.008005;
+use 5.014000;
 use strict;
 use warnings;
 
-our $VERSION = "0.03";
+our $VERSION = "0.04";
 
 use Test::More 0.98 ();
 use B::Deparse;
@@ -20,11 +20,6 @@ use constant {
     RESULT_VALUE => 0,
     RESULT_OPINDEX => 1,
 };
-
-use Config;
-if ($Config{useithreads}) {
-    die "Sorry, current version of Test::Power does not support ithreads. I want to fix this issue. Patches welcome.\n";
-}
 
 our $DEPARSE = B::Deparse->new;
 our $DUMP_CUTOFF = 80;
@@ -48,8 +43,12 @@ sub expect(&;$) {
         local $Data::Dumper::Terse = 1;
         local $Data::Dumper::Indent = 0;
         for my $result (@$tap_results) {
-            $BUILDER->diag($DEPARSE->deparse($op_stack->[$result->[RESULT_OPINDEX]]));
-            $BUILDER->diag("   => " . truncstr(Data::Dumper::Dumper($result->[RESULT_VALUE]), $DUMP_CUTOFF, '...'));
+            my $op = shift @$result;
+            for my $value (@$result) {
+                # take first argument if the value is scalar.
+                $BUILDER->diag($DEPARSE->deparse($op));
+                $BUILDER->diag("   => " . truncstr(Data::Dumper::Dumper($value->[1]), $DUMP_CUTOFF, '...'));
+            }
         }
     }
 }
@@ -120,6 +119,13 @@ This simply runs the C<&code>, and uses that to determine if the test succeeded 
 A true expression passes, a false one fails.  Very simple.
 
 =back
+
+=head1 REQUIRED PERL VERSION
+
+Perl5.14+ is required. 5.14+ provides better support for custom ops.
+L<B::Tap> required this. Under 5.14, perl5 can't do B::Deparse.
+
+Patches welcome to support 5.12, 5.10, 5.8.
 
 =head1 LICENSE
 

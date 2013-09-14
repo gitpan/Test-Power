@@ -4,8 +4,8 @@ LICENSE
 META.json
 README.md
 cpanfile
+eg/simple.t
 lib/Test/Power.pm
-lib/Test/Power/B.pm
 lib/Test/Power/Core.pm
 lib/Test/Power/FromLine.pm
 t/00_compile.t
