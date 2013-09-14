@@ -27,13 +27,14 @@ no_index:
 provides:
   Test::Power:
     file: lib/Test/Power.pm
-    version: 0.05
+    version: 0.06
   Test::Power::Core:
     file: lib/Test/Power/Core.pm
   Test::Power::FromLine:
     file: lib/Test/Power/FromLine.pm
 requires:
-  B::Tap: 0.01
+  B::Tap: 0.02
+  B::Tools: 0.01
   Test::More: 0.98
   Text::Truncate: 0
   parent: 0
@@ -42,6 +43,6 @@ resources:
   bugtracker: https://github.com/tokuhirom/Test-Power/issues
   homepage: https://github.com/tokuhirom/Test-Power
   repository: git://github.com/tokuhirom/Test-Power.git
-version: 0.05
+version: 0.06
 x_contributors:
   - 'adrian.candos <adrian.candos@dena.jp>'
