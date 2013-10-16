@@ -9,7 +9,7 @@ configure_requires:
   CPAN::Meta::Prereqs: 0
   Module::Build: 0.38
 dynamic_config: 0
-generated_by: 'Minilla/v0.6.5, CPAN::Meta::Converter version 2.132510'
+generated_by: 'Minilla/v0.7.5, CPAN::Meta::Converter version 2.132510'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,10 +24,11 @@ no_index:
     - eg
     - examples
     - author
+    - builder
 provides:
   Test::Power:
     file: lib/Test/Power.pm
-    version: 0.08
+    version: 0.09
   Test::Power::Core:
     file: lib/Test/Power/Core.pm
   Test::Power::FromLine:
@@ -43,6 +44,6 @@ resources:
   bugtracker: https://github.com/tokuhirom/Test-Power/issues
   homepage: https://github.com/tokuhirom/Test-Power
   repository: git://github.com/tokuhirom/Test-Power.git
-version: 0.08
+version: 0.09
 x_contributors:
   - 'adrian.candos <adrian.candos@dena.jp>'
