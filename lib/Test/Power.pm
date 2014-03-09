@@ -3,7 +3,7 @@ use 5.014000;
 use strict;
 use warnings;
 
-our $VERSION = "0.12";
+our $VERSION = "0.13";
 
 use Test::More 0.98 ();
 use B::Deparse;
@@ -27,29 +27,20 @@ sub expect(&;$) {
     my ($code, $description) = @_;
 
     my ($package, $filename, $line_no, $line) = Test::Power::FromLine::inspect_line(0);
+    $description ||= "L$line_no" . (length($line) ? " : $line" : '');
 
     my $BUILDER = Test::More->builder;
 
-    local $@;
-    my ($retval, $err, $tap_results, $op_stack)
-        = Test::Power::Core->give_me_power($code);
-    $description ||= "L$line_no" . (length($line) ? " : $line" : '');
-    if ($retval) {
-        $BUILDER->ok(1, $description);
-    } else {
-        $BUILDER->ok(0, $description);
-        $BUILDER->diag($err) if $err;
-        local $Data::Dumper::Terse = 1;
-        local $Data::Dumper::Indent = 0;
-        for my $result (@$tap_results) {
-            my $op = shift @$result;
-            for my $value (@$result) {
-                # take first argument if the value is scalar.
-                my $deparse = B::Deparse->new();
-                $deparse->{curcv} = B::svref_2object($code);
-                $BUILDER->diag($deparse->deparse($op));
-                $BUILDER->diag("   => " . truncstr(Data::Dumper::Dumper($value->[1]), $DUMP_CUTOFF, '...'));
-            }
+    my ($retval, $pairs) = Test::Power::Core->give_me_power($code);
+
+    $BUILDER->ok($retval, $description);
+
+    unless ($retval) {
+        while (@$pairs) {
+            my $code = shift @$pairs;
+            my $dump = shift @$pairs;
+            $BUILDER->diag("${code}");
+            $BUILDER->diag("   => " . truncstr($dump, $DUMP_CUTOFF, '...'));
         }
     }
 }

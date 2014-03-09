@@ -11,5 +11,6 @@ lib/Test/Power/FromLine.pm
 t/00_compile.t
 t/01_simple.t
 t/02_itself.t
+t/03_core.t
 META.yml
 MANIFEST

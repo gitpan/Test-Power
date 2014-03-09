@@ -4,14 +4,16 @@ use warnings;
 use utf8;
 use 5.010_001;
 
+our $VERSION = "0.13";
+
 # TODO: support method call
 
 use B qw(class ppname);
 use B::Tap qw(tap);
 use B::Tools qw(op_walk);
-
-our @TAP_RESULTS;
-our $ROOT;
+use B::Deparse;
+use Data::Dumper ();
+use Try::Tiny;
 
 sub null {
     my $op = shift;
@@ -23,16 +25,16 @@ sub give_me_power {
 
     my $cv= B::svref_2object($code);
 
-    local @TAP_RESULTS;
+    my @tap_results;
 
-    local $ROOT = $cv->ROOT;
+    my $root = $cv->ROOT;
     # local $B::overlay = {};
-    if (not null $ROOT) {
+    if (not null $root) {
         op_walk {
             if (need_hook($_)) {
                 my @buf = ($_);
                 tap($_, $cv->ROOT, \@buf);
-                push @TAP_RESULTS, \@buf;
+                push @tap_results, \@buf;
             }
         } $cv->ROOT;
     }
@@ -41,12 +43,39 @@ sub give_me_power {
         my $walker = B::Concise::compile('', '', $code);
         $walker->();
     }
-    my $retval = eval { $code->() };
+
+    my $retval = $code->();
+
     return (
         $retval,
-        $@,
-        [grep { @$_ > 1 } @TAP_RESULTS],
+        dump_pairs($code, [grep { @$_ > 1 } @tap_results]),
     );
+}
+
+sub dump_pairs {
+    my ($code, $tap_results) = @_;
+
+    my @pairs;
+    local $Data::Dumper::Terse = 1;
+    local $Data::Dumper::Indent = 0;
+    for my $result (@$tap_results) {
+        my $op = shift @$result;
+        for my $value (@$result) {
+            # take first argument if the value is scalar.
+            try {
+                # Suppress warnings for: sub { expect(\@p)->to_be(['a']) }
+                local $SIG{__WARN__} = sub { };
+
+                my $deparse = B::Deparse->new();
+                $deparse->{curcv} = B::svref_2object($code);
+                push @pairs, $deparse->deparse($op);
+                push @pairs, Data::Dumper::Dumper($value->[1]);
+            } catch {
+                warn $_
+            };
+        }
+    }
+    return \@pairs;
 }
 
 sub need_hook {

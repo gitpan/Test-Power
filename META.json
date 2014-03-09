@@ -4,7 +4,7 @@
       "tokuhirom <tokuhirom@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.8.3",
+   "generated_by" : "Minilla/v0.11.0",
    "license" : [
       "perl_5"
    ],
@@ -47,6 +47,7 @@
             "B::Tools" : "0.01",
             "Test::More" : "0.98",
             "Text::Truncate" : "0",
+            "Try::Tiny" : "0",
             "parent" : "0",
             "perl" : "5.014000"
          }
@@ -60,10 +61,11 @@
    "provides" : {
       "Test::Power" : {
          "file" : "lib/Test/Power.pm",
-         "version" : "0.12"
+         "version" : "0.13"
       },
       "Test::Power::Core" : {
-         "file" : "lib/Test/Power/Core.pm"
+         "file" : "lib/Test/Power/Core.pm",
+         "version" : "0.13"
       },
       "Test::Power::FromLine" : {
          "file" : "lib/Test/Power/FromLine.pm"
@@ -80,7 +82,7 @@
          "web" : "https://github.com/tokuhirom/Test-Power"
       }
    },
-   "version" : "0.12",
+   "version" : "0.13",
    "x_contributors" : [
       "adrian.candos <adrian.candos@dena.jp>"
    ]
